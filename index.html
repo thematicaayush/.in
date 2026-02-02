@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Valentine 💖</title>
+
+<style>
+:root {
+    --pink: #ff4a86;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+body {
+    height: 100vh;
+    background: radial-gradient(circle at top, #ffe1eb, #ffb6cc);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* Glass frame */
+.container {
+    width: 640px;
+    padding: 55px 70px;
+    border-radius: 42px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 40px 90px rgba(0,0,0,0.25);
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+/* STICKER */
+.sticker {
+    width: 110px;
+    margin-bottom: 18px;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+
+/* Question */
+h1 {
+    font-size: 2.35rem;
+    white-space: nowrap;
+    margin-bottom: 14px;
+    color: #333;
+}
+
+/* Buttons */
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-bottom: 8px;
+}
+
+button {
+    padding: 16px 50px;
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+    border-radius: 45px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: 0.25s ease;
+}
+
+/* YES */
+#yes {
+    background: #fff;
+    color: var(--pink);
+    border-color: var(--pink);
+}
+
+#yes:hover {
+    background: var(--pink);
+    color: #fff;
+}
+
+/* NO */
+#no {
+    background: #000;
+    color: #e6e6e6;
+    border-color: #bdbdbd;
+    position: fixed;
+    z-index: 5;
+}
+
+/* You can't say no */
+.subline {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+/* Video */
+.video-box {
+    display: none;
+    margin-top: 34px;
+    border-radius: 26px;
+    overflow: hidden;
+    border: 3px solid var(--pink);
+}
+
+.video-box video {
+    width: 100%;
+    height: 290px;
+    object-fit: cover;
+}
+
+/* Romantic line */
+.romantic-line {
+    display: none;
+    margin-top: 28px;
+    font-size: 1.9rem;
+    color: var(--pink);
+    animation: fadeUp 0.9s ease forwards;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Real confetti */
+.confetti {
+    position: fixed;
+    top: -12px;
+    width: 8px;
+    height: 14px;
+    opacity: 0.9;
+    animation: fall 1.3s linear forwards;
+    z-index: 20;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(110vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- STICKER AT START -->
+    <img
+        src="https://raw.githubusercontent.com/thematicaayush/.in/main/smile.png"
+        alt="Love Sticker"
+        class="sticker"
+    >
+
+    <h1 id="question">Priyanshi Do you LOVE me?</h1>
+
+    <div class="buttons">
+        <button id="yes">Yes</button>
+    </div>
+
+    <div class="subline" id="cantSayNo">You can’t say no 🙂</div>
+
+    <div class="video-box" id="videoBox">
+        <video autoplay muted loop>
+            <source src="https://raw.githubusercontent.com/thematicaayush/.in/main/WhatsApp%20Video%202026-02-02%20at%2011.06.46%20PM.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <div class="romantic-line" id="romanticLine">
+        I LOVE YOU TOO NA MERI JAAAAN❤️
+    </div>
+</div>
+
+<button id="no">No</button>
+
+<script>
+const yesBtn = document.getElementById("yes");
+const noBtn = document.getElementById("no");
+const question = document.getElementById("question");
+const cantSayNo = document.getElementById("cantSayNo");
+const videoBox = document.getElementById("videoBox");
+const romanticLine = document.getElementById("romanticLine");
+
+/* Initial NO position */
+const yesRect = yesBtn.getBoundingClientRect();
+let noX = yesRect.right + 30;
+let noY = yesRect.top;
+
+noBtn.style.left = noX + "px";
+noBtn.style.top = noY + "px";
+
+/* Block NO click */
+noBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+});
+
+/* NO evasion */
+document.addEventListener("mousemove", (e) => {
+    const rect = noBtn.getBoundingClientRect();
+    const btnX = rect.left + rect.width / 2;
+    const btnY = rect.top + rect.height / 2;
+
+    const dx = btnX - e.clientX;
+    const dy = btnY - e.clientY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    const escapeRadius = 240;
+    const panicRadius = 90;
+
+    if (distance < panicRadius) {
+        noX = Math.random() * (window.innerWidth - rect.width - 40) + 20;
+        noY = Math.random() * (window.innerHeight - rect.height - 40) + 20;
+    } 
+    else if (distance < escapeRadius) {
+        const angle = Math.atan2(dy, dx);
+        const speed = (escapeRadius - distance) * 1.7;
+        noX += Math.cos(angle) * speed;
+        noY += Math.sin(angle) * speed;
+    }
+
+    noX = Math.max(12, Math.min(window.innerWidth - rect.width - 12, noX));
+    noY = Math.max(12, Math.min(window.innerHeight - rect.height - 12, noY));
+
+    noBtn.style.left = noX + "px";
+    noBtn.style.top = noY + "px";
+});
+
+/* YES click */
+yesBtn.addEventListener("click", () => {
+    question.remove();
+    cantSayNo.remove();
+    yesBtn.remove();
+    noBtn.remove();
+
+    videoBox.style.display = "block";
+    romanticLine.style.display = "block";
+
+    confettiBurst();
+});
+
+/* Confetti */
+function confettiBurst() {
+    const colors = ["#ff4a86", "#ffd166", "#06d6a0", "#118ab2"];
+    for (let i = 0; i < 70; i++) {
+        const c = document.createElement("div");
+        c.className = "confetti";
+        c.style.left = Math.random() * 100 + "vw";
+        c.style.background = colors[Math.floor(Math.random() * colors.length)];
+        c.style.animationDuration = 1 + Math.random() * 0.4 + "s";
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 1500);
+    }
+}
+</script>
+
+</body>
+</html>
